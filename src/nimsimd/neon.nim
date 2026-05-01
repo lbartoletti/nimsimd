@@ -93,21 +93,54 @@ func vmov_n_u16*(a: uint16): uint16x4
 func vmov_n_u32*(a: uint32): uint32x2
 func vmov_n_u64*(a: uint64): uint64x1
 
-func vld1q_s32*(p: pointer): int32x4
+func vld1q_s32(p: ptr int32): int32x4
 
-func vld1q_u8*(p: pointer): uint8x16
-func vld1q_u16*(p: pointer): uint16x8
-func vld1q_u32*(p: pointer): uint32x4
-func vld1q_u64*(p: pointer): uint64x2
+template vld1q_s32*(p: pointer): int32x4 =
+  vld1q_s32(cast[ptr int32](p))
 
-func vld1q_f32*(p: pointer): float32x4
+func vld1q_u8(p: ptr uint8): uint8x16
+func vld1q_u16(p: ptr uint16): uint16x8
+func vld1q_u32(p: ptr uint32): uint32x4
+func vld1q_u64(p: ptr uint64): uint64x2
 
-func vld1_u8*(p: pointer): uint8x8
-func vld1_u16*(p: pointer): uint16x4
-func vld1_u32*(p: pointer): uint32x2
-func vld1_u64*(p: pointer): uint64x1
+template vld1q_u8*(p: pointer): uint8x16 =
+  vld1q_u8(cast[ptr uint8](p))
 
-func vld1_f32*(p: pointer): float32x2
+template vld1q_u16*(p: pointer): uint16x8 =
+  vld1q_u16(cast[ptr uint16](p))
+
+template vld1q_u32*(p: pointer): uint32x4 =
+  vld1q_u32(cast[ptr uint32](p))
+
+template vld1q_u64*(p: pointer): uint64x2 =
+  vld1q_u64(cast[ptr uint64](p))
+
+func vld1q_f32(p: ptr float32): float32x4
+
+template vld1q_f32*(p: pointer): float32x4 =
+  vld1q_f32(cast[ptr float32](p))
+
+func vld1_u8(p: ptr uint8): uint8x8
+func vld1_u16(p: ptr uint16): uint16x4
+func vld1_u32(p: ptr uint32): uint32x2
+func vld1_u64(p: ptr uint64): uint64x1
+
+template vld1_u8*(p: pointer): uint8x8 =
+  vld1_u8(cast[ptr uint8](p))
+
+template vld1_u16*(p: pointer): uint16x4 =
+  vld1_u16(cast[ptr uint16](p))
+
+template vld1_u32*(p: pointer): uint32x2 =
+  vld1_u32(cast[ptr uint32](p))
+
+template vld1_u64*(p: pointer): uint64x1 =
+  vld1_u64(cast[ptr uint64](p))
+
+func vld1_f32(p: ptr float32): float32x2
+
+template vld1_f32*(p: pointer): float32x2 =
+  vld1_f32(cast[ptr float32](p))
 
 func vceq_u8*(a, b: uint8x8): uint8x8
 func vceq_u16*(a, b: uint16x4): uint16x4
@@ -177,49 +210,151 @@ func vmlal_u8*(a: uint16x8, b, c: uint8x8): uint16x8
 func vmlal_u16*(a: uint32x4, b, c: uint16x4): uint32x4
 func vmlal_u32*(a: uint64x2, b, c: uint32x2): uint64x2
 
-func vst1q_lane_u8*(p: pointer, v: uint8x16, lane: int32)
-func vst1q_lane_u16*(p: pointer, v: uint16x8, lane: int32)
-func vst1q_lane_u32*(p: pointer, v: uint32x4, lane: int32)
-func vst1q_lane_u64*(p: pointer, v: uint64x2, lane: int32)
+func vst1q_lane_u8(p: ptr uint8, v: uint8x16, lane: int32)
+func vst1q_lane_u16(p: ptr uint16, v: uint16x8, lane: int32)
+func vst1q_lane_u32(p: ptr uint32, v: uint32x4, lane: int32)
+func vst1q_lane_u64(p: ptr uint64, v: uint64x2, lane: int32)
 
-func vld1q_lane_u8*(p: pointer, v: uint8x16, lane: int32): uint8x16
-func vld1q_lane_u16*(p: pointer, v: uint16x8, lane: int32): uint16x8
-func vld1q_lane_u32*(p: pointer, v: uint32x4, lane: int32): uint32x4
-func vld1q_lane_u64*(p: pointer, v: uint64x2, lane: int32): uint64x2
+template vst1q_lane_u8*(p: pointer, v: uint8x16, lane: int32) =
+  vst1q_lane_u8(cast[ptr uint8](p), v, lane)
 
-func vld1_lane_u32*(p: pointer, v: uint32x2, lane: int32): uint32x2
-func vld1_lane_u16*(p: pointer, v: uint16x4, lane: int32): uint16x4
-func vld1_lane_u8*(p: pointer, v: uint8x8, lane: int32): uint8x8
+template vst1q_lane_u16*(p: pointer, v: uint16x8, lane: int32) =
+  vst1q_lane_u16(cast[ptr uint16](p), v, lane)
 
-func vld1q_dup_f64*(p: pointer): float64x2
+template vst1q_lane_u32*(p: pointer, v: uint32x4, lane: int32) =
+  vst1q_lane_u32(cast[ptr uint32](p), v, lane)
 
-func vst1q_s32*(p: pointer, v: int32x4)
+template vst1q_lane_u64*(p: pointer, v: uint64x2, lane: int32) =
+  vst1q_lane_u64(cast[ptr uint64](p), v, lane)
 
-func vst1q_u8*(p: pointer, v: uint8x16)
-func vst1q_u16*(p: pointer, v: uint16x8)
-func vst1q_u32*(p: pointer, v: uint32x4)
-func vst1q_u64*(p: pointer, v: uint64x2)
-func vst1q_f32*(p: pointer, v: float32x4)
+func vld1q_lane_u8(p: ptr uint8, v: uint8x16, lane: int32): uint8x16
+func vld1q_lane_u16(p: ptr uint16, v: uint16x8, lane: int32): uint16x8
+func vld1q_lane_u32(p: ptr uint32, v: uint32x4, lane: int32): uint32x4
+func vld1q_lane_u64(p: ptr uint64, v: uint64x2, lane: int32): uint64x2
 
-func vst1_u8*(p: pointer, v: uint8x8)
-func vst1_u16*(p: pointer, v: uint16x4)
-func vst1_u32*(p: pointer, v: uint32x2)
-func vst1_u64*(p: pointer, v: uint64x1)
-func vst1_f32*(p: pointer, v: float32x2)
+template vld1q_lane_u8*(p: pointer, v: uint8x16, lane: int32): uint8x16 =
+  vld1q_lane_u8(cast[ptr uint8](p), v, lane)
 
-func vst1_lane_u32*(p: pointer, v: uint32x2, lane: int32)
-func vst1_lane_u16*(p: pointer, v: uint16x4, lane: int32)
-func vst1_lane_u8*(p: pointer, v: uint8x8, lane: int32)
+template vld1q_lane_u16*(p: pointer, v: uint16x8, lane: int32): uint16x8 =
+  vld1q_lane_u16(cast[ptr uint16](p), v, lane)
 
-func vst2_u8*(p: pointer, v: uint8x8x2)
-func vst2_u16*(p: pointer, v: uint16x4x2)
-func vst2_u32*(p: pointer, v: uint32x2x2)
-func vst2_u64*(p: pointer, v: uint64x1x2)
+template vld1q_lane_u32*(p: pointer, v: uint32x4, lane: int32): uint32x4 =
+  vld1q_lane_u32(cast[ptr uint32](p), v, lane)
 
-func vst1_u8_x2*(p: pointer, v: uint8x8x2)
-func vst1_u16_x2*(p: pointer, v: uint16x4x2)
-func vst1_u32_x2*(p: pointer, v: uint32x2x2)
-func vst1_u64_x2*(p: pointer, v: uint64x1x2)
+template vld1q_lane_u64*(p: pointer, v: uint64x2, lane: int32): uint64x2 =
+  vld1q_lane_u64(cast[ptr uint64](p), v, lane)
+
+func vld1_lane_u32(p: ptr uint32, v: uint32x2, lane: int32): uint32x2
+func vld1_lane_u16(p: ptr uint16, v: uint16x4, lane: int32): uint16x4
+func vld1_lane_u8(p: ptr uint8, v: uint8x8, lane: int32): uint8x8
+
+template vld1_lane_u32*(p: pointer, v: uint32x2, lane: int32): uint32x2 =
+  vld1_lane_u32(cast[ptr uint32](p), v, lane)
+
+template vld1_lane_u16*(p: pointer, v: uint16x4, lane: int32): uint16x4 =
+  vld1_lane_u16(cast[ptr uint16](p), v, lane)
+
+template vld1_lane_u8*(p: pointer, v: uint8x8, lane: int32): uint8x8 =
+  vld1_lane_u8(cast[ptr uint8](p), v, lane)
+
+func vld1q_dup_f64(p: ptr float64): float64x2
+
+template vld1q_dup_f64*(p: pointer): float64x2 =
+  vld1q_dup_f64(cast[ptr float64](p))
+
+func vst1q_s32(p: ptr int32, v: int32x4)
+
+template vst1q_s32*(p: pointer, v: int32x4) =
+  vst1q_s32(cast[ptr int32](p), v)
+
+func vst1q_u8(p: ptr uint8, v: uint8x16)
+func vst1q_u16(p: ptr uint16, v: uint16x8)
+func vst1q_u32(p: ptr uint32, v: uint32x4)
+func vst1q_u64(p: ptr uint64, v: uint64x2)
+func vst1q_f32(p: ptr float32, v: float32x4)
+
+template vst1q_u8*(p: pointer, v: uint8x16) =
+  vst1q_u8(cast[ptr uint8](p), v)
+
+template vst1q_u16*(p: pointer, v: uint16x8) =
+  vst1q_u16(cast[ptr uint16](p), v)
+
+template vst1q_u32*(p: pointer, v: uint32x4) =
+  vst1q_u32(cast[ptr uint32](p), v)
+
+template vst1q_u64*(p: pointer, v: uint64x2) =
+  vst1q_u64(cast[ptr uint64](p), v)
+
+template vst1q_f32*(p: pointer, v: float32x4) =
+  vst1q_f32(cast[ptr float32](p), v)
+
+func vst1_u8(p: ptr uint8, v: uint8x8)
+func vst1_u16(p: ptr uint16, v: uint16x4)
+func vst1_u32(p: ptr uint32, v: uint32x2)
+func vst1_u64(p: ptr uint64, v: uint64x1)
+func vst1_f32(p: ptr float32, v: float32x2)
+
+template vst1_u8*(p: pointer, v: uint8x8) =
+  vst1_u8(cast[ptr uint8](p), v)
+
+template vst1_u16*(p: pointer, v: uint16x4) =
+  vst1_u16(cast[ptr uint16](p), v)
+
+template vst1_u32*(p: pointer, v: uint32x2) =
+  vst1_u32(cast[ptr uint32](p), v)
+
+template vst1_u64*(p: pointer, v: uint64x1) =
+  vst1_u64(cast[ptr uint64](p), v)
+
+template vst1_f32*(p: pointer, v: float32x2) =
+  vst1_f32(cast[ptr float32](p), v)
+
+func vst1_lane_u32(p: ptr uint32, v: uint32x2, lane: int32)
+func vst1_lane_u16(p: ptr uint16, v: uint16x4, lane: int32)
+func vst1_lane_u8(p: ptr uint8, v: uint8x8, lane: int32)
+
+template vst1_lane_u32*(p: pointer, v: uint32x2, lane: int32) =
+  vst1_lane_u32(cast[ptr uint32](p), v, lane)
+
+template vst1_lane_u16*(p: pointer, v: uint16x4, lane: int32) =
+  vst1_lane_u16(cast[ptr uint16](p), v, lane)
+
+template vst1_lane_u8*(p: pointer, v: uint8x8, lane: int32) =
+  vst1_lane_u8(cast[ptr uint8](p), v, lane)
+
+func vst2_u8(p: ptr uint8, v: uint8x8x2)
+func vst2_u16(p: ptr uint16, v: uint16x4x2)
+func vst2_u32(p: ptr uint32, v: uint32x2x2)
+func vst2_u64(p: ptr uint64, v: uint64x1x2)
+
+template vst2_u8*(p: pointer, v: uint8x8x2) =
+  vst2_u8(cast[ptr uint8](p), v)
+
+template vst2_u16*(p: pointer, v: uint16x4x2) =
+  vst2_u16(cast[ptr uint16](p), v)
+
+template vst2_u32*(p: pointer, v: uint32x2x2) =
+  vst2_u32(cast[ptr uint32](p), v)
+
+template vst2_u64*(p: pointer, v: uint64x1x2) =
+  vst2_u64(cast[ptr uint64](p), v)
+
+func vst1_u8_x2(p: ptr uint8, v: uint8x8x2)
+func vst1_u16_x2(p: ptr uint16, v: uint16x4x2)
+func vst1_u32_x2(p: ptr uint32, v: uint32x2x2)
+func vst1_u64_x2(p: ptr uint64, v: uint64x1x2)
+
+template vst1_u8_x2*(p: pointer, v: uint8x8x2) =
+  vst1_u8_x2(cast[ptr uint8](p), v)
+
+template vst1_u16_x2*(p: pointer, v: uint16x4x2) =
+  vst1_u16_x2(cast[ptr uint16](p), v)
+
+template vst1_u32_x2*(p: pointer, v: uint32x2x2) =
+  vst1_u32_x2(cast[ptr uint32](p), v)
+
+template vst1_u64_x2*(p: pointer, v: uint64x1x2) =
+  vst1_u64_x2(cast[ptr uint64](p), v)
 
 func vand_u8*(a, b: uint8x8): uint8x8
 func vand_u16*(a, b: uint16x4): uint16x4
@@ -258,37 +393,112 @@ func vget_high_u32*(a: uint32x4): uint32x2
 func vget_high_u64*(a: uint64x2): uint64x1
 func vget_high_f32*(a: float32x4): float32x2
 
-func vld4_u8*(p: pointer): uint8x8x4
-func vld4_u16*(p: pointer): uint16x4x4
-func vld4_u32*(p: pointer): uint32x2x4
-func vld4_u64*(p: pointer): uint64x1x4
+func vld4_u8(p: ptr uint8): uint8x8x4
+func vld4_u16(p: ptr uint16): uint16x4x4
+func vld4_u32(p: ptr uint32): uint32x2x4
+func vld4_u64(p: ptr uint64): uint64x1x4
 
-func vld4q_u8*(p: pointer): uint8x16x4
-func vld4q_u16*(p: pointer): uint16x8x4
-func vld4q_u32*(p: pointer): uint32x4x4
-func vld4q_u64*(p: pointer): uint64x2x4
+template vld4_u8*(p: pointer): uint8x8x4 =
+  vld4_u8(cast[ptr uint8](p))
 
-func vst2q_s32*(p: pointer, a: int32x4x2)
+template vld4_u16*(p: pointer): uint16x4x4 =
+  vld4_u16(cast[ptr uint16](p))
 
-func vst4q_u8*(p: pointer, a: uint8x16x4)
-func vst4q_u16*(p: pointer, a: uint16x8x4)
-func vst4q_u32*(p: pointer, a: uint32x4x4)
-func vst4q_u64*(p: pointer, a: uint64x2x4)
+template vld4_u32*(p: pointer): uint32x2x4 =
+  vld4_u32(cast[ptr uint32](p))
 
-func vst4_u8*(p: pointer, a: uint8x8x4)
-func vst4_u16*(p: pointer, a: uint16x4x4)
-func vst4_u32*(p: pointer, a: uint32x2x4)
-func vst4_u64*(p: pointer, a: uint64x1x4)
+template vld4_u64*(p: pointer): uint64x1x4 =
+  vld4_u64(cast[ptr uint64](p))
 
-func vld4q_dup_u8*(p: pointer): uint8x16x4
-func vld4q_dup_u16*(p: pointer): uint16x8x4
-func vld4q_dup_u32*(p: pointer): uint32x4x4
-func vld4q_dup_u64*(p: pointer): uint64x2x4
+func vld4q_u8(p: ptr uint8): uint8x16x4
+func vld4q_u16(p: ptr uint16): uint16x8x4
+func vld4q_u32(p: ptr uint32): uint32x4x4
+func vld4q_u64(p: ptr uint64): uint64x2x4
 
-func vst1q_u8_x4*(p: pointer, a: uint8x16x4)
-func vst1q_u16_x4*(p: pointer, a: uint16x8x4)
-func vst1q_u32_x4*(p: pointer, a: uint32x4x4)
-func vst1q_u64_x4*(p: pointer, a: uint64x2x4)
+template vld4q_u8*(p: pointer): uint8x16x4 =
+  vld4q_u8(cast[ptr uint8](p))
+
+template vld4q_u16*(p: pointer): uint16x8x4 =
+  vld4q_u16(cast[ptr uint16](p))
+
+template vld4q_u32*(p: pointer): uint32x4x4 =
+  vld4q_u32(cast[ptr uint32](p))
+
+template vld4q_u64*(p: pointer): uint64x2x4 =
+  vld4q_u64(cast[ptr uint64](p))
+
+func vst2q_s32(p: ptr int32, a: int32x4x2)
+
+template vst2q_s32*(p: pointer, a: int32x4x2) =
+  vst2q_s32(cast[ptr int32](p), a)
+
+func vst4q_u8(p: ptr uint8, a: uint8x16x4)
+func vst4q_u16(p: ptr uint16, a: uint16x8x4)
+func vst4q_u32(p: ptr uint32, a: uint32x4x4)
+func vst4q_u64(p: ptr uint64, a: uint64x2x4)
+
+template vst4q_u8*(p: pointer, a: uint8x16x4) =
+  vst4q_u8(cast[ptr uint8](p), a)
+
+template vst4q_u16*(p: pointer, a: uint16x8x4) =
+  vst4q_u16(cast[ptr uint16](p), a)
+
+template vst4q_u32*(p: pointer, a: uint32x4x4) =
+  vst4q_u32(cast[ptr uint32](p), a)
+
+template vst4q_u64*(p: pointer, a: uint64x2x4) =
+  vst4q_u64(cast[ptr uint64](p), a)
+
+func vst4_u8(p: ptr uint8, a: uint8x8x4)
+func vst4_u16(p: ptr uint16, a: uint16x4x4)
+func vst4_u32(p: ptr uint32, a: uint32x2x4)
+func vst4_u64(p: ptr uint64, a: uint64x1x4)
+
+template vst4_u8*(p: pointer, a: uint8x8x4) =
+  vst4_u8(cast[ptr uint8](p), a)
+
+template vst4_u16*(p: pointer, a: uint16x4x4) =
+  vst4_u16(cast[ptr uint16](p), a)
+
+template vst4_u32*(p: pointer, a: uint32x2x4) =
+  vst4_u32(cast[ptr uint32](p), a)
+
+template vst4_u64*(p: pointer, a: uint64x1x4) =
+  vst4_u64(cast[ptr uint64](p), a)
+
+func vld4q_dup_u8(p: ptr uint8): uint8x16x4
+func vld4q_dup_u16(p: ptr uint16): uint16x8x4
+func vld4q_dup_u32(p: ptr uint32): uint32x4x4
+func vld4q_dup_u64(p: ptr uint64): uint64x2x4
+
+template vld4q_dup_u8*(p: pointer): uint8x16x4 =
+  vld4q_dup_u8(cast[ptr uint8](p))
+
+template vld4q_dup_u16*(p: pointer): uint16x8x4 =
+  vld4q_dup_u16(cast[ptr uint16](p))
+
+template vld4q_dup_u32*(p: pointer): uint32x4x4 =
+  vld4q_dup_u32(cast[ptr uint32](p))
+
+template vld4q_dup_u64*(p: pointer): uint64x2x4 =
+  vld4q_dup_u64(cast[ptr uint64](p))
+
+func vst1q_u8_x4(p: ptr uint8, a: uint8x16x4)
+func vst1q_u16_x4(p: ptr uint16, a: uint16x8x4)
+func vst1q_u32_x4(p: ptr uint32, a: uint32x4x4)
+func vst1q_u64_x4(p: ptr uint64, a: uint64x2x4)
+
+template vst1q_u8_x4*(p: pointer, a: uint8x16x4) =
+  vst1q_u8_x4(cast[ptr uint8](p), a)
+
+template vst1q_u16_x4*(p: pointer, a: uint16x8x4) =
+  vst1q_u16_x4(cast[ptr uint16](p), a)
+
+template vst1q_u32_x4*(p: pointer, a: uint32x4x4) =
+  vst1q_u32_x4(cast[ptr uint32](p), a)
+
+template vst1q_u64_x4*(p: pointer, a: uint64x2x4) =
+  vst1q_u64_x4(cast[ptr uint64](p), a)
 
 func vzip1q_u8*(a, b: uint8x16): uint8x16
 func vzip1q_u16*(a, b: uint16x8): uint16x8
