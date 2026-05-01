@@ -1,28 +1,26 @@
-type
-  InstructionSet* = enum
-    SSE3
-    SSSE3
-    SSE41
-    SSE42
-    AVX
-    AVX2
-    PCLMULQDQ
-    SHA
-    AES
-    CMPXCHG16B
-    F16C
-    BMI1
-    BMI2
-    NEON
-
 when defined(amd64):
   ## https://www.felixcloutier.com/x86/cpuid
 
   type
+    InstructionSet* = enum
+      SSE3
+      SSSE3
+      SSE41
+      SSE42
+      AVX
+      AVX2
+      PCLMULQDQ
+      SHA
+      AES
+      CMPXCHG16B
+      F16C
+      BMI1
+      BMI2
+
     InstructionSetCheckInfo = object
       leaf, register, bit: int
 
-  const CheckInfos = [
+  const checkInfos = [
     InstructionSetCheckInfo(leaf: 1, register: 2, bit: 0), # SSE3
     InstructionSetCheckInfo(leaf: 1, register: 2, bit: 9), # SSSE3
     InstructionSetCheckInfo(leaf: 1, register: 2, bit: 19), # SSE41
@@ -39,7 +37,6 @@ when defined(amd64):
   ]
 
   proc cpuid(eaxi, ecxi: int32): array[4, int32] = # eax, ebx, ecx, edx
-    ## Returns x86 CPUID registers for the requested leaf.
     when defined(vcc):
       proc cpuid(cpuInfo: ptr int32, functionId, subFunctionId: int32)
         {.cdecl, importc: "__cpuidex", header: "intrin.h".}
@@ -53,7 +50,6 @@ when defined(amd64):
       [eaxr, ebxr, ecxr, edxr]
 
   proc checkInstructionSets*(instructionSets: set[InstructionSet]): bool =
-    ## Returns true if all requested instruction sets are available.
     result = true
 
     let
@@ -61,33 +57,10 @@ when defined(amd64):
       leaf7 = cpuid(7, 0)
 
     for instructionSet in instructionSets:
-      if instructionSet == NEON:
-        return false
-
-      let checkInfo = CheckInfos[instructionSet.ord]
+      let checkInfo = checkInfos[instructionSet.ord]
       if checkInfo.leaf == 1:
         if (leaf1[checkInfo.register] and (1 shl checkInfo.bit)) == 0:
           return false
       else:
         if (leaf7[checkInfo.register] and (1 shl checkInfo.bit)) == 0:
           return false
-
-elif defined(arm64):
-  proc checkInstructionSets*(instructionSets: set[InstructionSet]): bool =
-    ## Returns true if all requested instruction sets are available.
-    result = true
-
-    for instructionSet in instructionSets:
-      case instructionSet
-      of NEON:
-        discard
-      else:
-        return false
-
-else:
-  proc checkInstructionSets*(instructionSets: set[InstructionSet]): bool =
-    ## Returns true if all requested instruction sets are available.
-    result = true
-
-    for instructionSet in instructionSets:
-      return false
