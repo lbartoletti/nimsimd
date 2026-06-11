@@ -93,6 +93,20 @@ func vmov_n_u16*(a: uint16): uint16x4
 func vmov_n_u32*(a: uint32): uint32x2
 func vmov_n_u64*(a: uint64): uint64x1
 
+func vdupq_n_u8*(a: uint8): uint8x16
+func vdupq_n_u16*(a: uint16): uint16x8
+func vdupq_n_u32*(a: uint32): uint32x4
+func vdupq_n_u64*(a: uint64): uint64x2
+func vdupq_n_s32*(a: int32): int32x4
+func vdupq_n_f32*(a: float32): float32x4
+func vdupq_n_f64*(a: float64): float64x2
+
+func vdup_n_u8*(a: uint8): uint8x8
+func vdup_n_u16*(a: uint16): uint16x4
+func vdup_n_u32*(a: uint32): uint32x2
+func vdup_n_u64*(a: uint64): uint64x1
+func vdup_n_f32*(a: float32): float32x2
+
 func vld1q_s32(p: ptr int32): int32x4
 
 template vld1q_s32*(p: pointer): int32x4 =
@@ -505,6 +519,11 @@ func vzip1q_u16*(a, b: uint16x8): uint16x8
 func vzip1q_u32*(a, b: uint32x4): uint32x4
 func vzip1q_u64*(a, b: uint64x2): uint64x2
 
+func vzip2q_u8*(a, b: uint8x16): uint8x16
+func vzip2q_u16*(a, b: uint16x8): uint16x8
+func vzip2q_u32*(a, b: uint32x4): uint32x4
+func vzip2q_u64*(a, b: uint64x2): uint64x2
+
 func vget_lane_u8*(a: uint8x8, lane: int32): uint8
 func vget_lane_u16*(a: uint16x4, lane: int32): uint16
 func vget_lane_u32*(a: uint32x2, lane: int32): uint32
@@ -541,6 +560,19 @@ func vshlq_n_u8*(a: uint8x16, n: int): uint8x16
 func vshlq_n_u16*(a: uint16x8, n: int): uint16x8
 func vshlq_n_u32*(a: uint32x4, n: int): uint32x4
 func vshlq_n_u64*(a: uint64x2, n: int): uint64x2
+
+func vsriq_n_u8*(a, b: uint8x16, n: int): uint8x16
+func vsriq_n_u16*(a, b: uint16x8, n: int): uint16x8
+func vsriq_n_u32*(a, b: uint32x4, n: int): uint32x4
+func vsriq_n_u64*(a, b: uint64x2, n: int): uint64x2
+
+func vsliq_n_u8*(a, b: uint8x16, n: int): uint8x16
+func vsliq_n_u16*(a, b: uint16x8, n: int): uint16x8
+func vsliq_n_u32*(a, b: uint32x4, n: int): uint32x4
+func vsliq_n_u64*(a, b: uint64x2, n: int): uint64x2
+
+func vrev32q_u8*(a: uint8x16): uint8x16
+func vrev32q_u16*(a: uint16x8): uint16x8
 
 func vrshrq_n_u8*(a: uint8x16, n: int): uint8x16
 func vrshrq_n_u16*(a: uint16x8, n: int): uint16x8
@@ -602,8 +634,8 @@ func vmaxq_f32*(a, b: float32x4): float32x4
 func vmul_f32*(a, b: float32x2): float32x2
 func vmulq_f32*(a, b: float32x4): float32x4
 
-# func vcvtq_f32_u32*(a: uint32x4): float32x4
-# func vcvtq_u32_f32*(a: float32x4): uint32x4
+func vcvtq_f32_u32*(a: uint32x4): float32x4
+func vcvtq_u32_f32*(a: float32x4): uint32x4
 func vcvtq_s32_f32*(a: float32x4): int32x4
 func vcvtq_f32_s32*(a: int32x4): float32x4
 
@@ -630,6 +662,9 @@ func vmvnq_u32*(a: uint32x4): uint32x4
 func vornq_u8*(a, b: uint8x16): uint8x16
 
 func vqtbl1q_u8*(t: uint8x16, idx: uint8x16): uint8x16
+func vqtbl2q_u8*(t: uint8x16x2, idx: uint8x16): uint8x16
+func vqtbl3q_u8*(t: uint8x16x3, idx: uint8x16): uint8x16
+func vqtbl4q_u8*(t: uint8x16x4, idx: uint8x16): uint8x16
 
 func vcntq_u8*(a: uint8x16): uint8x16
 
@@ -666,6 +701,8 @@ func vreinterpretq_u32_u64*(a: uint64x2): uint32x4
 func vreinterpretq_u64_u32*(a: uint32x4): uint64x2
 func vreinterpretq_u8_u32*(a: uint32x4): uint8x16
 func vreinterpretq_u32_u8*(a: uint8x16): uint32x4
+func vreinterpretq_u16_u32*(a: uint32x4): uint16x8
+func vreinterpretq_u32_u16*(a: uint16x8): uint32x4
 func vreinterpretq_u8_s32*(a: int32x4): uint8x16
 func vreinterpretq_s32_u8*(a: uint8x16): int32x4
 func vreinterpretq_s32_u32*(a: uint32x4): int32x4
