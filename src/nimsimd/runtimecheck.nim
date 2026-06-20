@@ -83,8 +83,41 @@ when defined(amd64):
         :"a"(`eaxi`), "c"(`ecxi`)"""
       [eaxr, ebxr, ecxr, edxr]
 
+  proc xgetbv0(): uint64 =
+    when defined(vcc):
+      proc xgetbv(index: uint32): uint64 {.importc: "_xgetbv", header: "intrin.h".}
+      xgetbv(0)
+    else:
+      var (eaxr, edxr) = (0'u32, 0'u32)
+      asm """
+        xgetbv
+        :"=a"(`eaxr`), "=d"(`edxr`)
+        :"c"(0)"""
+      (uint64(edxr) shl 32) or uint64(eaxr)
+
+  const avx512OSStateInstructionSets = {
+    AVX512F, AVX512CD, AVX512DQ, AVX512BW, AVX512VL, AVX512VNNI, AVX512IFMA,
+    AVX512VBMI, AVX512VBMI2, AVX512VPOPCNTDQ, AVX512BITALG, AVX512BF16,
+    AVX512FP16, AVX512VP2INTERSECT
+  }
+
+  proc osSupportsAvx512(): bool =
+    ## OSXSAVE (CPUID.1:ECX[27]) must be set and XCR0 must have the opmask
+    ## (bit 5), ZMM_Hi256 (bit 6) and Hi16_ZMM (bit 7) state-save bits set,
+    ## otherwise the OS has not enabled AVX-512 register state and using it
+    ## will fault even though the CPU advertises the feature bits.
+    let leaf1 = cpuid(1, 0)
+    if (leaf1[2] and (1'i32 shl 27)) == 0:
+      return false
+    const avx512StateMask = (1'u64 shl 5) or (1'u64 shl 6) or (1'u64 shl 7)
+    (xgetbv0() and avx512StateMask) == avx512StateMask
+
   proc checkInstructionSets*(instructionSets: set[InstructionSet]): bool =
     result = true
+
+    if instructionSets * avx512OSStateInstructionSets != {} and
+        not osSupportsAvx512():
+      return false
 
     let
       leaf1 = cpuid(1, 0)
@@ -99,6 +132,10 @@ when defined(amd64):
       elif checkInfo.leaf == 7 and checkInfo.subleaf == 0:
         leaf = leaf7_0
       elif checkInfo.leaf == 7 and checkInfo.subleaf == 1:
+        # EAX of leaf 7 / subleaf 0 reports the highest supported subleaf.
+        # If the CPU does not expose subleaf 1, the feature is unavailable.
+        if leaf7_0[0] < 1:
+          return false
         leaf = leaf7_1
       else:
         return false
