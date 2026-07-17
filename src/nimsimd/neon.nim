@@ -5,6 +5,7 @@
 type
   int32x2* {.importc: "int32x2_t".} = object
   int32x4* {.importc: "int32x4_t".} = object
+  int64x2* {.importc: "int64x2_t".} = object
 
   uint8x16* {.importc: "uint8x16_t".} = object
   uint16x8* {.importc: "uint16x8_t".} = object
@@ -85,6 +86,7 @@ func vmovq_n_u32*(a: uint32): uint32x4
 func vmovq_n_u64*(a: uint64): uint64x2
 func vmovq_n_f32*(a: float32): float32x4
 func vmovq_n_f64*(a: float64): float64x2
+func vmovq_n_s64*(a: int64): int64x2
 
 func vmovq_n_s32*(a: int32): int32x4
 
@@ -202,6 +204,8 @@ func vpadd_u32*(a, b: uint32x2): uint32x2
 func vaddq_u8*(a, b: uint8x16): uint8x16
 func vaddq_u16*(a, b: uint16x8): uint16x8
 func vaddq_u32*(a, b: uint32x4): uint32x4
+func vaddq_s32*(a, b: int32x4): int32x4
+func vaddq_s64*(a, b: int64x2): int64x2
 func vaddq_u64*(a, b: uint64x2): uint64x2
 func vaddq_f32*(a, b: float32x4): float32x4
 
@@ -559,7 +563,11 @@ func vshrq_n_u64*(a: uint64x2, n: int): uint64x2
 func vshlq_n_u8*(a: uint8x16, n: int): uint8x16
 func vshlq_n_u16*(a: uint16x8, n: int): uint16x8
 func vshlq_n_u32*(a: uint32x4, n: int): uint32x4
+func vshlq_n_s32*(a: int32x4, n: int): int32x4
 func vshlq_n_u64*(a: uint64x2, n: int): uint64x2
+
+func vshrq_n_s64*(a: int64x2, n: int): int64x2
+func vshlq_n_s64*(a: int64x2, n: int): int64x2
 
 func vsriq_n_u8*(a, b: uint8x16, n: int): uint8x16
 func vsriq_n_u16*(a, b: uint16x8, n: int): uint16x8
@@ -639,6 +647,9 @@ func vcvtq_u32_f32*(a: float32x4): uint32x4
 func vcvtq_s32_f32*(a: float32x4): int32x4
 func vcvtq_f32_s32*(a: int32x4): float32x4
 
+func vcvtq_s64_f64*(a: float64x2): int64x2
+func vcvtq_f64_s64*(a: int64x2): float64x2
+
 func vextq_u32*(a, b: uint32x4, n: int): uint32x4
 func vextq_u64*(a, b: uint64x2, n: int): uint64x2
 func vextq_f64*(a, b: float64x2, n: int): float64x2
@@ -715,6 +726,39 @@ func vreinterpret_u8_u32*(a: uint32x2): uint8x8
 func vreinterpret_u64_u8*(a: uint8x8): uint64x1
 func vreinterpret_s32_u32*(a: uint32x2): int32x2
 func vreinterpret_f32_u64*(a: uint64x1): float32x2
+
+func vld1q_f64(p: ptr float64): float64x2
+
+template vld1q_f64*(p: pointer): float64x2 =
+  vld1q_f64(cast[ptr float64](p))
+
+func vst1q_f64(p: ptr float64, v: float64x2)
+
+template vst1q_f64*(p: pointer, v: float64x2) =
+  vst1q_f64(cast[ptr float64](p), v)
+
+func vaddq_f64*(a, b: float64x2): float64x2
+func vsubq_f64*(a, b: float64x2): float64x2
+func vmulq_f64*(a, b: float64x2): float64x2
+func vdivq_f64*(a, b: float64x2): float64x2
+func vnegq_f64*(a: float64x2): float64x2
+func vabsq_f64*(a: float64x2): float64x2
+func vminq_f64*(a, b: float64x2): float64x2
+func vmaxq_f64*(a, b: float64x2): float64x2
+
+func vceqq_f64*(a, b: float64x2): uint64x2
+func vcgtq_f64*(a, b: float64x2): uint64x2
+func vcltq_f64*(a, b: float64x2): uint64x2
+func vcgeq_f64*(a, b: float64x2): uint64x2
+func vcleq_f64*(a, b: float64x2): uint64x2
+
+func vbslq_f64*(a: uint64x2, b, c: float64x2): float64x2
+
+func vreinterpretq_f64_u64*(a: uint64x2): float64x2
+func vreinterpretq_u64_f64*(a: float64x2): uint64x2
+
+func vreinterpretq_f64_s64*(a: int64x2): float64x2
+func vreinterpretq_s64_f64*(a: float64x2): int64x2
 
 {.pop.}
 
