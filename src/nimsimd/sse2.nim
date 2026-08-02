@@ -541,6 +541,12 @@ func mm_setzero_si128*(): M128i {.importc: "_mm_setzero_si128".}
 
 func mm_shuffle_epi32*(a: M128i, imm8: int32 | uint32): M128i {.importc: "_mm_shuffle_epi32".}
 
+template mm_shuffle2_epi32*(a, b: M128i, imm8: static[int32 | uint32]): M128i =
+  ## `mm_shuffle_ps` on integer vectors: the low two dwords of the result are
+  ## selected from `a` and the high two from `b`, per `imm8` (build it with
+  ## `MM_SHUFFLE`). Saves the explicit float casts at the call site.
+  mm_castps_si128(mm_shuffle_ps(mm_castsi128_ps(a), mm_castsi128_ps(b), imm8))
+
 func mm_shuffle_pd*(a, b: M128d, imm8: int32 | uint32): M128d {.importc: "_mm_shuffle_pd".}
 
 func mm_shufflehi_epi16*(a: M128i, imm8: int32 | uint32): M128i {.importc: "_mm_shufflehi_epi16".}
